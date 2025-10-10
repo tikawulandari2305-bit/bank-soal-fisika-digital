@@ -9,8 +9,8 @@ nama = st.text_input("Masukkan nama kamu:")
 nilai = 0
 
 # Input sebagai siswa  
-role = st.button("Siswa"):
-if role == "Siswa":
+st.button("Siswa"):
+if st.button == "Siswa":
     st.header("🧠 Halaman Siswa")
     
     st.write("Silakan jawab soal berikut:")
