@@ -28,7 +28,7 @@ if role == "Siswa":
         st.success(f"Skor kamu: {skor}/2")
 hasil = pd.DataFrame({"Nama": [nama], "Skor": [skor]})
 hasil.to_csv("hasil_siswa.csv", mode="a", header=False, index=False)
-        st.info("Jawaban kamu sudah direkam!")
+        st.write("Jawaban kamu sudah direkam!")
 
 # Input sebagai guru
 role = st.button("Guru")
