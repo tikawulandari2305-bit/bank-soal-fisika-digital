@@ -9,10 +9,8 @@ nilai = 0
 
 # Input sebagai siswa  
 role = st.button("Siswa")
-role = st.button("Guru")
 if role == "Siswa":
     st.header("🧠 Halaman Siswa")
-    nama = st.text_input("Masukkan nama kamu:")
     
     st.write("Silakan jawab soal berikut:")
     soal1 = st.radio("1. Besaran turunan di bawah ini adalah:", 
@@ -33,7 +31,8 @@ hasil.to_csv("hasil_siswa.csv", mode="a", header=False, index=False)
         st.info("Jawaban kamu sudah direkam!")
 
 # Input sebagai guru
-elif role == "Guru":
+role = st.button("Guru")
+if role == "Guru":
     st.header("👩‍🏫 Halaman Guru")
     st.write("Berikut data hasil siswa:")
     
