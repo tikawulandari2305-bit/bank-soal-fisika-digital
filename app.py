@@ -36,8 +36,3 @@ if role == "Guru":
     st.header("👩‍🏫 Halaman Guru")
     st.write("Berikut data hasil siswa:")
     
-    try:
-        data = pd.read_csv("hasil_siswa.csv", names=["Nama", "Skor"])
-        st.dataframe(data)
-    except FileNotFoundError:
-        st.warning("Belum ada data siswa yang mengerjakan.")
