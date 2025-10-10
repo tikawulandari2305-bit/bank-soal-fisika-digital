@@ -8,7 +8,7 @@ nama = st.text_input("Masukkan nama kamu:")
 nilai = 0
 
 # Input sebagai siswa atau guru 
-role = st.button("Masuk sebagai:", ["Siswa", "Guru"])
+role = st.button("Siswa")
 
 # Soal 1
 st.subheader("Soal 1")
