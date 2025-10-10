@@ -26,7 +26,6 @@ if role == "Siswa":
             skor += 1
         
         st.success(f"Skor kamu: {skor}/2")
-hasil.to_csv("hasil_siswa.csv", mode="a", header=False, index=False)
 st.warning("Jawaban kamu sudah direkam!")
 
 # Input sebagai guru
