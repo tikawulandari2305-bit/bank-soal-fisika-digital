@@ -20,11 +20,11 @@ if st.session_state.page == "home":
     with col1:
         if st.button("🧠 Masuk sebagai Siswa"):
             st.session_state.page = "siswa"
-            st.experimental_rerun()
+            st.rerun()
     with col2:
         if st.button("👩‍🏫 Masuk sebagai Guru"):
             st.session_state.page = "guru"
-            st.experimental_rerun()
+            st.rerun()
 
 # ===============================
 # HALAMAN SISWA
@@ -56,7 +56,7 @@ if st.session_state.page == "siswa":
 
     if st.button("⬅️ Kembali ke Beranda"):
         st.session_state.page = "home"
-        st.experimental_rerun()
+        st.rerun()
 
 # ===============================
 # HALAMAN GURU
@@ -73,4 +73,4 @@ if st.session_state.page == "guru":
 
     if st.button("⬅️ Kembali ke Beranda"):
         st.session_state.page = "home"
-        st.experimental_rerun()
+        st.rerun()
