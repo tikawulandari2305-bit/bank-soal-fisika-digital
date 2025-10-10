@@ -7,20 +7,23 @@ st.write("Selamat datang di aplikasi bank soal fisika interaktif!")
 nama = st.text_input("Masukkan nama kamu:")
 nilai = 0
 
-# Input sebagai siswa atau guru 
+# Input sebagai siswa  
 role = st.button("Siswa")
-
-# Soal 1
-st.subheader("Soal 1")
-st.write("Sebuah benda bermassa 2 kg bergerak dengan percepatan 3 m/s². Berapa gaya yang bekerja padanya?")
-jawaban1 = st.number_input("Jawaban (dalam Newton):", min_value=0)
-if st.button("Cek Jawaban Soal 1"):
-    if jawaban1 == 6:
-        st.success("Benar! 💪")
-        nilai += 10
-    else:
-        st.error("Salah 😅 Jawaban yang benar adalah 6 N")
-
-# Hasil akhir
-if st.button("Tampilkan Nilai Akhir"):
-    st.write(f"Nilai akhir {nama} adalah: {nilai}")
+if role == "Siswa":
+    st.header("🧠 Halaman Siswa")
+    nama = st.text_input("Masukkan nama kamu:")
+    
+    st.write("Silakan jawab soal berikut:")
+    soal1 = st.radio("1. Besaran turunan di bawah ini adalah:", 
+                     ["Massa", "Waktu", "Gaya", "Suhu"])
+    soal2 = st.radio("2. Satuan dari gaya adalah:", 
+                     ["Joule", "Newton", "Pascal", "Watt"])
+    
+    if st.button("Kirim Jawaban"):
+        skor = 0
+        if soal1 == "Gaya":
+            skor += 1
+        if soal2 == "Newton":
+            skor += 1
+        
+        st.success(f"Skor kamu: {skor}/2")
