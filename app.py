@@ -7,6 +7,9 @@ st.write("Selamat datang di aplikasi bank soal fisika interaktif!")
 nama = st.text_input("Masukkan nama kamu:")
 nilai = 0
 
+# Input sebagai siswa atau guru 
+role = st.button("Masuk sebagai:", ["Siswa", "Guru"])
+
 # Soal 1
 st.subheader("Soal 1")
 st.write("Sebuah benda bermassa 2 kg bergerak dengan percepatan 3 m/s². Berapa gaya yang bekerja padanya?")
