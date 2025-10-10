@@ -9,6 +9,7 @@ nilai = 0
 
 # Input sebagai siswa  
 role = st.button("Siswa")
+role = st.button("Guru")
 if role == "Siswa":
     st.header("🧠 Halaman Siswa")
     nama = st.text_input("Masukkan nama kamu:")
@@ -27,3 +28,17 @@ if role == "Siswa":
             skor += 1
         
         st.success(f"Skor kamu: {skor}/2")
+hasil = pd.DataFrame({"Nama": [nama], "Skor": [skor]})
+hasil.to_csv("hasil_siswa.csv", mode="a", header=False, index=False)
+        st.info("Jawaban kamu sudah direkam!")
+
+# Input sebagai guru
+elif role == "Guru":
+    st.header("👩‍🏫 Halaman Guru")
+    st.write("Berikut data hasil siswa:")
+    
+    try:
+        data = pd.read_csv("hasil_siswa.csv", names=["Nama", "Skor"])
+        st.dataframe(data)
+    except FileNotFoundError:
+        st.warning("Belum ada data siswa yang mengerjakan.")
