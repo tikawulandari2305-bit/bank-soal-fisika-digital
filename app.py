@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 
 st.title("📘 Bank Soal Fisika Digital")
 st.write("Selamat datang di aplikasi bank soal fisika interaktif!")
@@ -8,7 +9,7 @@ nama = st.text_input("Masukkan nama kamu:")
 nilai = 0
 
 # Input sebagai siswa  
-role = st.button("Siswa")
+role = st.button("Siswa"):
 if role == "Siswa":
     st.header("🧠 Halaman Siswa")
     
@@ -28,8 +29,18 @@ if role == "Siswa":
         st.success(f"Skor kamu: {skor}/2")
 st.warning("Jawaban kamu sudah direkam!")
 
+        # Simpan hasil ke file CSV
+            hasil = pd.DataFrame({"Nama": [nama], "Skor": [skor]})
+            hasil.to_csv("hasil_latihan.csv", mode="a", header=False, index=False)
+
+    
+    # Bisa tambahkan latihan lain:
+    if st.button("Latihan Soal 2"):
+        st.subheader("Latihan 2: Hukum Newton")
+        st.write("Contoh latihan berikutnya nanti bisa kamu tambahkan di sini!")
+
 # Input sebagai guru
-role = st.button("Guru")
+role = st.button("Guru"):
 if role == "Guru":
     st.header("👩‍🏫 Halaman Guru")
     st.write("Berikut data hasil siswa:")
