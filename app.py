@@ -49,32 +49,79 @@ if st.session_state.page == "siswa":
         skor = 0
 
         for i, row in df.iterrows():
-            st.write(f"**{i+1}. {row['Pertanyaan']}**")
-            pilihan = st.radio(
-                "Pilih jawabanmu:",
-                [row["Opsi_A"], row["Opsi_B"], row["Opsi_C"], row["Opsi_D"]],
-                key=f"soal_{i}"
-            )
+    st.write(f"**{i+1}. {row['soal']}**")
+    
+    # Buat daftar pilihan dari data Excel
+    pilihan_opsi = [
+        row['Opsi_a'],
+        row['Opsi_b'],
+        row['Opsi_c'],
+        row['Opsi_d']
+    ]
             jawaban_siswa.append(pilihan)
 
         if st.button("Kirim Jawaban"):
-            hasil = []
+# Analisis setiap siswa
+        hasil = []
+        for idx, row in jawaban.iterrows():
+    nama = row["nama"]
+    skor_total = 0
+    total_soal = len(soal_list)
+
+# Catatan untuk per materi dan per level
+    benar_materi = {}
+    benar_level = {}
+
+    for q in soal_list:
+        benar = str(row[q]).strip().lower() == str(kunci[q]).strip().lower()
+        if benar:
+            skor_total += 1
+
+# Ambil info dari bank soal
+        materi = bank.loc[bank["id"] == q, "materi"].values[0]
+        level = bank.loc[bank["id"] == q, "level_bloom"].values[0]
+
+# Hitung benar per materi
+        benar_materi[materi] = benar_materi.get(materi, 0) + (1 if benar else 0)
+        benar_level[level] = benar_level.get(level, 0) + (1 if benar else 0)
+
+# Buat nilai total
+    nilai = (skor_total / total_soal) * 100
             for i, row in df.iterrows():
-                benar = row["Jawaban_Benar"]
-                pembahasan = row["Pembahasan"]
-                if jawaban_siswa[i] == benar:
-                    skor += 1
-                    hasil.append({"No": i+1, "Status": "✅ Benar", "Pembahasan": pembahasan})
-                else:
-                    hasil.append({"No": i+1, "Status": f"❌ Salah (Jawaban benar: {benar})", "Pembahasan": pembahasan})
+                benar = row["jawaban_Benar"]
+                
+# Buat kesimpulan otomatis
+    kesimpulan = []
+# Evaluasi per materi
+    for materi in bank["materi"].unique():
+        jumlah_soal = len(bank[bank["materi"] == materi])
+        benar = benar_materi.get(materi, 0)
+        if benar < jumlah_soal / 2:
+            kesimpulan.append(f"Lemah di materi {materi}")
+        else:
+            kesimpulan.append(f"Sudah menguasai materi {materi}")
+# Evaluasi per level Bloom
+    for level in bank["level_bloom"].unique():
+        jumlah_level = len(bank[bank["level_bloom"] == level])
+        benar = benar_level.get(level, 0)
+        if benar < jumlah_level / 2:
+            kesimpulan.append(f"Perlu meningkatkan kemampuan {level} ({'mengingat' if level=='C1' else 'memahami'})")
+        else:
+            kesimpulan.append(f"Sudah baik pada level {level}")
+    hasil.append({
+        "nama": nama,
+        "skor_benar": skor_total,
+        "total_soal": total_soal,
+        "nilai": nilai,
+        "kesimpulan": "; ".join(kesimpulan)
+    })
 
-            st.success(f"Skor kamu: {skor} / {len(df)}")
-            st.subheader("📘 Pembahasan:")
-            st.table(pd.DataFrame(hasil))
+# Simpan hasil ke Excel
+hasil_df = pd.DataFrame(hasil)
+hasil_df.to_excel("hasil_nilai_dengan_kesimpulan.xlsx", index=False)
 
-            # Simpan hasil ke file CSV
-            hasil_simpan = pd.DataFrame({"Nama": [nama], "Skor": [skor]})
-            hasil_simpan.to_csv("hasil_latihan.csv", mode="a", header=False, index=False)
+print(hasil_df)
+       
 
     if st.button("⬅️ Kembali ke Beranda"):
         st.session_state.page = "home"
