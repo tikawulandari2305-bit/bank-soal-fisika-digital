@@ -49,7 +49,7 @@ if st.session_state.page == "siswa":
         skor = 0
 
         for i, row in df.iterrows():
-    st.write(f"**{i+1}. {row['soal']}**")
+            st.write(f"**{i+1}. {row['soal']}**")
     
     # Buat daftar pilihan dari data Excel
     pilihan_opsi = [
