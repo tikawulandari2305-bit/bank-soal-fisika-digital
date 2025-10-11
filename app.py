@@ -110,7 +110,7 @@ if st.session_state.page == "siswa":
     })
 
 # Simpan hasil ke Excel
-hasil_df = pd.DataFrame(hasil)
+hasil_df = pd.df(hasil)
 hasil_df.to_excel("hasil_nilai_dengan_kesimpulan.xlsx", index=False)
 
 print(hasil_df)
