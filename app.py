@@ -47,9 +47,14 @@ if st.session_state.page == "siswa":
     if st.button("Mulai Latihan"):
         jawaban_siswa = []
         skor = 0
-
+# Buat daftar pilihan dari data Excel
         for i, row in df.iterrows():
             st.write(f"**{i+1}. {row['soal']}**")
+    pilihan = st.radio(
+        "Pilih jawabanmu:",
+        pilihan_opsi,
+        key=f"soal_{i}"  
+    )
     
     # Buat daftar pilihan dari data Excel
 for i, row in df.iterrows():
