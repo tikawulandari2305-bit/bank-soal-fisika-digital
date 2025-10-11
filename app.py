@@ -56,7 +56,8 @@ for i, row in df.iterrows():
     st.write(f"**{i+1}. {row['soal']}**")
     pilihan = st.radio("Pilih jawabanmu:", ["A", "B", "C", "D"])
     jawaban_siswa.append(pilihan)
-       if st.button("Kirim Jawaban"):
+    
+    if st.button("Kirim Jawaban"):
 # Analisis setiap siswa
         hasil = []
         for idx, row in jawaban.iterrows():
