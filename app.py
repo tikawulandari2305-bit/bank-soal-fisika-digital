@@ -113,13 +113,13 @@ hasil_df = pd.DataFrame(hasil)
 st.dataframe(hasil_df)
 
 # Tombol unduh hasil
-            csv = hasil_df.to_csv(index=False).encode('utf-8')
-            st.download_button(
-                label="💾 Unduh hasil kamu (CSV)",
-                data=csv,
-                file_name=f"hasil_{nama}.csv",
-                mime="text/csv"
-            )
+csv = hasil_df.to_csv(index=False).encode('utf-8')
+st.download_button(
+   label="💾 Unduh hasil kamu (CSV)",
+   data=csv,
+   file_name=f"hasil_{nama}.csv",
+   mime="text/csv"
+)
 
 print(hasil_df)
 if st.button("⬅️ Kembali ke Beranda"):
