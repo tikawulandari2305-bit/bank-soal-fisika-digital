@@ -109,9 +109,17 @@ if st.session_state.page == "siswa":
         "kesimpulan": "; ".join(kesimpulan)
     })
 
-# Simpan hasil ke Excel
 hasil_df = pd.DataFrame(hasil)
-hasil_df.to_excel("hasil_nilai_dengan_kesimpulan.xlsx", index=False)
+            st.dataframe(hasil_df)
+
+# Tombol unduh hasil
+            csv = hasil_df.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="💾 Unduh hasil kamu (CSV)",
+                data=csv,
+                file_name=f"hasil_{nama}.csv",
+                mime="text/csv"
+            )
 
 print(hasil_df)
 if st.button("⬅️ Kembali ke Beranda"):
