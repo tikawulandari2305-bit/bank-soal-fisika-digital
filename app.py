@@ -118,9 +118,7 @@ hasil_df = pd.DataFrame(hasil)
 hasil_df.to_excel("hasil_nilai_dengan_kesimpulan.xlsx", index=False)
 
 print(hasil_df)
-       
-
-    if st.button("⬅️ Kembali ke Beranda"):
+if st.button("⬅️ Kembali ke Beranda"):
         st.session_state.page = "home"
         st.rerun()
 
