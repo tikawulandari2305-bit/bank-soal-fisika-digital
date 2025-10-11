@@ -9,7 +9,7 @@ st.title("⚡ Bank Soal Fisika Interaktif")
 # MEMBACA DATA SOAL DARI EXCEL
 # ===============================
 try:
-    df = pd.read_excel("data/Book1.xlsx")
+    df = pd.read_excel("Book1.xlsx")
 
     # Kolom wajib dalam file Excel:
     # 'Pertanyaan', 'Opsi_A', 'Opsi_B', 'Opsi_C', 'Opsi_D', 'Jawaban_Benar', 'Pembahasan'
