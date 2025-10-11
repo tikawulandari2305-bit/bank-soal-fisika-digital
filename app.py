@@ -109,9 +109,6 @@ if st.session_state.page == "siswa":
         "kesimpulan": "; ".join(kesimpulan)
     })
 
-hasil_df = pd.DataFrame(hasil)
-st.dataframe(hasil_df)
-
 # Tombol unduh hasil
 csv = hasil_df.to_csv(index=False).encode('utf-8')
 st.download_button(
