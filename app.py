@@ -118,11 +118,6 @@ st.download_button(
    mime="text/csv"
 )
 
-print(hasil_df)
-if st.button("⬅️ Kembali ke Beranda"):
-        st.session_state.page = "home"
-        st.rerun()
-
 # ===============================
 # HALAMAN GURU
 # ===============================
