@@ -61,9 +61,9 @@ for i, row in df.iterrows():
 # Analisis setiap siswa
         hasil = []
         for idx, row in jawaban.iterrows():
-    nama = row["nama"]
-    skor_total = 0
-    total_soal = len(soal_list)
+            nama = row["nama"]
+            skor_total = 0
+            total_soal = len(soal_list)
 
 # Catatan untuk per materi dan per level
     benar_materi = {}
