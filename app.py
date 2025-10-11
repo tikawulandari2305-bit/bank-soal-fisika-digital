@@ -48,7 +48,7 @@ if st.session_state.page == "siswa":
         jawaban_siswa = []
         skor = 0
         
-       for i, row in df.iterrows():
+        for i, row in df.iterrows():
             st.write(f"**{i+1}. {row['soal']}**")
             pilihan_opsi = [row['opsi_a'], row['opsi_b'], row['opsi_c'], row['opsi_d']]
             jawaban = st.radio("Pilih jawabanmu:", pilihan_opsi, key=f"soal_{i}")
