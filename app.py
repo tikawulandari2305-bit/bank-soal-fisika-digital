@@ -52,13 +52,10 @@ if st.session_state.page == "siswa":
             st.write(f"**{i+1}. {row['soal']}**")
     
     # Buat daftar pilihan dari data Excel
-    pilihan_opsi = [
-        row['Opsi_a'],
-        row['Opsi_b'],
-        row['Opsi_c'],
-        row['Opsi_d']
-    ]
-     jawaban_siswa.append(pilihan)
+for i, row in df.iterrows():
+    st.write(f"**{i+1}. {row['soal']}**")
+    pilihan = st.radio("Pilih jawabanmu:", ["A", "B", "C", "D"])
+    jawaban_siswa.append(pilihan)
 
         if st.button("Kirim Jawaban"):
 # Analisis setiap siswa
