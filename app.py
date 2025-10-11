@@ -52,14 +52,15 @@ if st.session_state.page == "siswa":
             st.write(f"**{i+1}. {row['soal']}**")
             pilihan_opsi = [row['opsi_a'], row['opsi_b'], row['opsi_c'], row['opsi_d']]
             jawaban = st.radio("Pilih jawabanmu:", pilihan_opsi, key=f"soal_{i}")
-
+            
         if st.button("Kirim Jawaban"):
+            
 # Analisis setiap siswa
-        hasil = []
-        for idx, row in jawaban_siswa.iterrows():
-            nama = row["nama"]
-            skor_total = 0
-            total_soal = len(soal_list)
+hasil = []
+for idx, row in jawaban_siswa.iterrows():
+    nama = row["nama"]
+    skor_total = 0
+    total_soal = len(soal_list)
 
 # Catatan untuk per materi dan per level
     benar_materi = {}
