@@ -109,15 +109,6 @@ if st.session_state.page == "siswa":
         "kesimpulan": "; ".join(kesimpulan)
     })
 
-# Tombol unduh hasil
-csv = hasil_df.to_csv(index=False).encode('utf-8')
-st.download_button(
-   label="💾 Unduh hasil kamu (CSV)",
-   data=csv,
-   file_name=f"hasil_{nama}.csv",
-   mime="text/csv"
-)
-
 # ===============================
 # HALAMAN GURU
 # ===============================
