@@ -55,11 +55,11 @@ if st.session_state.page == "siswa":
     if st.button("Kirim Jawaban"):
             
 # Analisis setiap siswa
-hasil = []
-for idx, row in jawaban_siswa.iterrows():
-    nama = row["nama"]
-    skor_total = 0
-    total_soal = len(soal_list)
+       hasil = []
+       for idx, row in jawaban_siswa.iterrows():
+            nama = row["nama"]
+            skor_total = 0
+            total_soal = len(soal_list)
 
 # Catatan untuk per materi dan per level
     benar_materi = {}
