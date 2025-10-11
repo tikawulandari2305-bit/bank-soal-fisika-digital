@@ -110,7 +110,7 @@ if st.session_state.page == "siswa":
     })
 
 hasil_df = pd.DataFrame(hasil)
-            st.dataframe(hasil_df)
+st.dataframe(hasil_df)
 
 # Tombol unduh hasil
             csv = hasil_df.to_csv(index=False).encode('utf-8')
