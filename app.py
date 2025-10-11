@@ -83,9 +83,8 @@ for i, row in df.iterrows():
         benar_level[level] = benar_level.get(level, 0) + (1 if benar else 0)
 
 # Buat nilai total
-    nilai = (skor_total / total_soal) * 100
-    
-     for i, row in df.iterrows():
+    nilai = (skor_total / total_soal) * 100 
+    for i, row in df.iterrows():
          benar = row["jawaban_Benar"]
                 
 # Buat kesimpulan otomatis
