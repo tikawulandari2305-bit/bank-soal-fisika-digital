@@ -58,7 +58,7 @@ if st.session_state.page == "siswa":
         row['Opsi_c'],
         row['Opsi_d']
     ]
-            jawaban_siswa.append(pilihan)
+     jawaban_siswa.append(pilihan)
 
         if st.button("Kirim Jawaban"):
 # Analisis setiap siswa
