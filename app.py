@@ -43,10 +43,7 @@ if st.session_state.page == "siswa":
                          ["Newton", "Pascal", "Joule", "Watt"])
 
         if st.button("Kirim Jawaban"):
-            skor = 0
-            if soal1 == "Newton": skor += 1
-            if soal2 == "Massa": skor += 1
-            if soal3 == "Joule": skor += 1
+            nilai = (skor_total / total_soal) * 100
 
             st.success(f"Skor kamu: {skor}/3")
             st.info("Terima kasih sudah mengerjakan latihan ini! 🌟")
