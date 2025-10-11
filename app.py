@@ -109,6 +109,7 @@ if st.session_state.page == "siswa":
         "kesimpulan": "; ".join(kesimpulan)
     })
 
+
 # ===============================
 # HALAMAN GURU
 # ===============================
