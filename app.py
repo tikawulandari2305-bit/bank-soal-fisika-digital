@@ -86,7 +86,7 @@ for i, row in df.iterrows():
     nilai = (skor_total / total_soal) * 100
     
      for i, row in df.iterrows():
-                benar = row["jawaban_Benar"]
+         benar = row["jawaban_Benar"]
                 
 # Buat kesimpulan otomatis
     kesimpulan = []
