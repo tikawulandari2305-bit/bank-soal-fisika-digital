@@ -56,7 +56,7 @@ if st.session_state.page == "siswa":
             
 # Analisis setiap siswa
               hasil = []
-                for idx, row in jawaban_siswa.iterrows():
+              for idx, row in jawaban_siswa.iterrows():
                     nama = row["nama"]
                     skor_total = 0
                     total_soal = len(soal_list)
