@@ -52,7 +52,7 @@ if st.session_state.page == "siswa":
             st.write(f"**{i+1}. {row['soal']}**")
             pilihan_opsi = [row['opsi_a'], row['opsi_b'], row['opsi_c'], row['opsi_d']]
             jawaban = st.radio("Pilih jawabanmu:", pilihan_opsi, key=f"soal_{i}")
-            if st.button("Kirim Jawaban"):
+    if st.button("Kirim Jawaban"):
             
 # Analisis setiap siswa
 hasil = []
