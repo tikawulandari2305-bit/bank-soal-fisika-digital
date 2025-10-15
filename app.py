@@ -44,31 +44,55 @@ if st.session_state.page == "siswa":
 
     nama = st.text_input("Masukkan nama kamu:")
 
+    if st.session_state.page == "siswa":
+    st.header("🧠 Halaman Siswa")
+
+    nama = st.text_input("Masukkan nama kamu:")
+
     if st.button("Mulai Latihan"):
         jawaban_siswa = []
         skor = 0
-        
+
+        # daftar soal untuk ditampilkan
+        soal_list = df["soal"].tolist()  
+
         for i, row in df.iterrows():
             st.write(f"**{i+1}. {row['soal']}**")
             pilihan_opsi = [row['opsi_a'], row['opsi_b'], row['opsi_c'], row['opsi_d']]
             jawaban = st.radio("Pilih jawabanmu:", pilihan_opsi, key=f"soal_{i}")
-            if st.button("Kirim Jawaban"):
-            
-# Analisis setiap siswa
-              hasil = []
-              for idx, row in jawaban_siswa.iterrows():
-                    nama = row["nama"]
-                    skor_total = 0
-                    total_soal = len(soal_list)
 
-# Catatan untuk per materi dan per level
-    benar_materi = {}
-    benar_level = {}
+            # Simpan pilihan siswa
+            jawaban_siswa.append({
+                "nama": nama,
+                "soal": row["soal"],
+                "jawaban": jawaban,
+                "kunci": row["kunci"]
+            })
 
-    for q in soal_list:
-        benar = str(row[q]).strip().lower() == str(kunci[q]).strip().lower()
-        if benar:
-            skor_total += 1
+        # Setelah siswa selesai menjawab
+        if st.button("Kirim Jawaban"):
+            hasil = []
+            skor_total = 0
+            total_soal = len(soal_list)
+
+            for row in jawaban_siswa:
+                benar = str(row["jawaban"]).strip().lower() == str(row["kunci"]).strip().lower()
+                if benar:
+                    skor_total += 1
+
+            nilai = (skor_total / total_soal) * 100
+            st.success(f"Skor kamu: {skor_total}/{total_soal} ({nilai:.2f})")
+
+            hasil.append({
+                "nama": nama,
+                "skor_benar": skor_total,
+                "total_soal": total_soal,
+                "nilai": nilai
+            })
+
+            # Tampilkan tabel hasil
+            hasil_df = pd.DataFrame(hasil)
+            st.dataframe(hasil_df)
 
 # Ambil info dari bank soal
         materi = bank.loc[bank["id"] == q, "materi"].values[0]
