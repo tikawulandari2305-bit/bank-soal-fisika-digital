@@ -44,11 +44,6 @@ if st.session_state.page == "siswa":
 
     nama = st.text_input("Masukkan nama kamu:")
 
-    if st.session_state.page == "siswa":
-    st.header("🧠 Halaman Siswa")
-
-    nama = st.text_input("Masukkan nama kamu:")
-
     if st.button("Mulai Latihan"):
         jawaban_siswa = []
         skor = 0
