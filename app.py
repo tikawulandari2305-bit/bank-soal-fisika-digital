@@ -165,11 +165,11 @@ for teks in kesimpulan_level:
 kesimpulan = kesimpulan_umum + " | " + "; ".join(kesimpulan_materi + kesimpulan_level)
 
         # Tombol kembali
-        if st.button("⬅️ Kembali ke Beranda"):
-            st.session_state.page = "home"
-            st.session_state.pop("mulai", None)
-            st.session_state.pop("jawaban_siswa", None)
-            st.rerun()
+if st.button("⬅️ Kembali ke Beranda"):
+    st.session_state.page = "home"
+    st.session_state.pop("mulai", None)
+    st.session_state.pop("jawaban_siswa", None)
+    st.rerun()
 # -----------------------------
 # HALAMAN GURU
 # -----------------------------
