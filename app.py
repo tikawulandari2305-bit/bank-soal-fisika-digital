@@ -53,66 +53,82 @@ if st.session_state.page == "siswa":
     if nama:
         st.info("Klik tombol di bawah untuk memulai latihan 👇")
         if st.button("🚀 Mulai Latihan Soal"):
-            jawaban_siswa = []
+            st.session_state["mulai"] = True
+
+    # Jika latihan sudah dimulai
+    if st.session_state.get("mulai", False):
+        st.subheader(f"Halo, {nama}! Selamat mengerjakan 🌟")
+        st.markdown("---")
+
+        # Siapkan session_state untuk jawaban
+        if "jawaban_siswa" not in st.session_state:
+            st.session_state.jawaban_siswa = {}
+
+        # Tampilkan soal satu per satu
+        for i, row in df.iterrows():
+            st.markdown(f"**{i+1}. {row['soal']}**")
+            opsi = [row["opsi_a"], row["opsi_b"], row["opsi_c"], row["opsi_d"]]
+
+            # Gunakan session_state agar pilihan tidak hilang
+            st.session_state.jawaban_siswa[i] = st.radio(
+                f"Pilih jawabanmu untuk soal {i+1}:",
+                opsi,
+                key=f"radio_{i}",
+                index=opsi.index(st.session_state.jawaban_siswa[i])
+                if i in st.session_state.jawaban_siswa and st.session_state.jawaban_siswa[i] in opsi
+                else 0
+            )
+
+            st.markdown("<hr>", unsafe_allow_html=True)
+
+        # Tombol kirim jawaban
+        if st.button("✅ Kirim Jawaban"):
+            jawaban_siswa = st.session_state.jawaban_siswa
             skor_benar = 0
+            total_soal = len(df)
 
-            st.markdown("---")
             for i, row in df.iterrows():
-                st.markdown(f"**{i+1}. {row['soal']}**")
-                opsi = [row["opsi_a"], row["opsi_b"], row["opsi_c"], row["opsi_d"]]
-                pilihan = st.radio("Pilih jawabanmu:", opsi, key=f"soal_{i}")
-                jawaban_siswa.append({
-                    "soal": row["soal"],
-                    "jawaban": pilihan,
-                    "benar": row["jawaban_benar"]
-                })
-                st.markdown("<hr>", unsafe_allow_html=True)
+                jawaban = jawaban_siswa.get(i, "")
+                benar = str(jawaban).strip().lower() == str(row["jawaban_benar"]).strip().lower()
+                if benar:
+                    skor_benar += 1
 
-            if st.button("✅ Kirim Jawaban"):
-                total_soal = len(jawaban_siswa)
-                for j in jawaban_siswa:
-                    if str(j["jawaban"]).strip().lower() == str(j["benar"]).strip().lower():
-                        skor_benar += 1
+            nilai = (skor_benar / total_soal) * 100
 
-                nilai = (skor_benar / total_soal) * 100
+            st.success(f"🎯 Skor kamu: {skor_benar}/{total_soal} ({nilai:.2f})")
+            st.progress(nilai / 100)
 
-                st.success(f"🎯 Skor kamu: {skor_benar}/{total_soal} ({nilai:.2f})")
-                st.progress(nilai / 100)
+            # Evaluasi hasil
+            if nilai >= 80:
+                kesimpulan = "Pemahamanmu sangat baik! 🌟"
+            elif nilai >= 60:
+                kesimpulan = "Cukup baik, tapi masih perlu memperdalam beberapa konsep ⚙️"
+            else:
+                kesimpulan = "Perlu belajar lagi, tetap semangat ya! 💪"
 
-                # Evaluasi sederhana
-                if nilai >= 80:
-                    kesimpulan = "Pemahamanmu sangat baik! 🌟"
-                elif nilai >= 60:
-                    kesimpulan = "Cukup baik, tapi masih perlu memperdalam beberapa konsep ⚙️"
-                else:
-                    kesimpulan = "Perlu belajar lagi, tetap semangat ya! 💪"
+            st.markdown(f"**Kesimpulan:** {kesimpulan}")
 
-                st.markdown(f"**Kesimpulan:** {kesimpulan}")
+            hasil_df = pd.DataFrame([
+                {"Nama": nama, "Benar": skor_benar, "Total Soal": total_soal, "Nilai": nilai}
+            ])
+            st.dataframe(hasil_df)
 
-                # Tampilkan tabel hasil
-                hasil_df = pd.DataFrame(jawaban_siswa)
-                st.dataframe(hasil_df)
+            # Simpan hasil ke CSV
+            hasil_df.to_csv("hasil_latihan.csv", mode="a", header=False, index=False)
 
-                # Simpan hasil (opsional)
-                hasil = pd.DataFrame([{
-                    "Nama": nama,
-                    "Benar": skor_benar,
-                    "Total Soal": total_soal,
-                    "Nilai": nilai,
-                    "Kesimpulan": kesimpulan
-                }])
-                hasil.to_csv("hasil_latihan.csv", mode="a", header=False, index=False)
+            st.download_button(
+                label="💾 Unduh Hasil (CSV)",
+                data=hasil_df.to_csv(index=False).encode("utf-8"),
+                file_name=f"hasil_{nama}.csv",
+                mime="text/csv"
+            )
 
-                st.download_button(
-                    label="💾 Unduh Hasil (CSV)",
-                    data=hasil.to_csv(index=False).encode("utf-8"),
-                    file_name=f"hasil_{nama}.csv",
-                    mime="text/csv"
-                )
-
-    if st.button("⬅️ Kembali ke Beranda"):
-        st.session_state.page = "home"
-        st.rerun()
+        # Tombol kembali
+        if st.button("⬅️ Kembali ke Beranda"):
+            st.session_state.page = "home"
+            st.session_state.pop("mulai", None)
+            st.session_state.pop("jawaban_siswa", None)
+            st.rerun()
 # -----------------------------
 # HALAMAN GURU
 # -----------------------------
