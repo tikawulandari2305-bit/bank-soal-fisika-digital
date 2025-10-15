@@ -163,21 +163,6 @@ for teks in kesimpulan_level:
 
 # Simpan kesimpulan utama
 kesimpulan = kesimpulan_umum + " | " + "; ".join(kesimpulan_materi + kesimpulan_level)
-            hasil_df = pd.DataFrame([
-                {"Nama": nama, "Benar": skor_benar, "Total Soal": total_soal, "Nilai": nilai}
-            ])
-            st.dataframe(hasil_df)
-
-
-            # Simpan hasil ke CSV
-            hasil_df.to_csv("hasil_latihan.csv", mode="a", header=False, index=False)
-
-            st.download_button(
-                label="💾 Unduh Hasil (CSV)",
-                data=hasil_df.to_csv(index=False).encode("utf-8"),
-                file_name=f"hasil_{nama}.csv",
-                mime="text/csv"
-            )
 
         # Tombol kembali
         if st.button("⬅️ Kembali ke Beranda"):
