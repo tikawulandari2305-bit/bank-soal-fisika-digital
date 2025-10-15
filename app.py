@@ -1,32 +1,39 @@
 import streamlit as st
 import pandas as pd
 
-st.set_page_config(page_title="Bank Soal Fisika", page_icon="⚡", layout="centered")
+# -----------------------------
+# KONFIGURASI HALAMAN
+# -----------------------------
+st.set_page_config(page_title="Bank Soal Fisika Digital", page_icon="⚡", layout="centered")
 
-st.title("⚡ Bank Soal Fisika Interaktif")
+st.markdown(
+    """
+    <h1 style='text-align: center; color: #ffcc00;'>⚡ Bank Soal Fisika Interaktif</h1>
+    <p style='text-align: center; color: #cccccc;'>Latih pemahaman konsep fisika dan dapatkan evaluasi otomatis 💡</p>
+    """,
+    unsafe_allow_html=True
+)
 
-# ===============================
-# MEMBACA DATA SOAL DARI EXCEL
-# ===============================
+# -----------------------------
+# MEMBACA FILE EXCEL
+# -----------------------------
 try:
-    df = pd.read_excel("Book1.xlsx")
-
-    # Kolom wajib dalam file Excel:
-    # 'Pertanyaan', 'Opsi_A', 'Opsi_B', 'Opsi_C', 'Opsi_D', 'Jawaban_Benar', 'Pembahasan'
+    df = pd.read_excel("Book1.xlsx")  # pastikan nama kolom di Excel benar
+    st.success("✅ File soal berhasil dimuat!")
 except FileNotFoundError:
-    st.error("❌ File soal_fisika.xlsx belum ditemukan. Pastikan file sudah diunggah ke GitHub.")
+    st.error("❌ File 'Book1.xlsx' tidak ditemukan. Pastikan file sudah diunggah ke GitHub.")
     st.stop()
 
-# ===============================
-# HALAMAN UTAMA
-# ===============================
+# -----------------------------
+# HALAMAN UTAMA (HOME)
+# -----------------------------
 if "page" not in st.session_state:
     st.session_state.page = "home"
 
 if st.session_state.page == "home":
-    st.subheader("Silakan pilih peran:")
+    st.markdown("### 👋 Selamat datang di aplikasi latihan soal fisika!")
+    st.markdown("Pilih peranmu di bawah ini untuk memulai:")
     col1, col2 = st.columns(2)
-
     with col1:
         if st.button("🧠 Siswa"):
             st.session_state.page = "siswa"
@@ -35,112 +42,3 @@ if st.session_state.page == "home":
         if st.button("👩‍🏫 Guru"):
             st.session_state.page = "guru"
             st.rerun()
-
-# ===============================
-# HALAMAN SISWA
-# ===============================
-if st.session_state.page == "siswa":
-    st.header("🧠 Halaman Siswa")
-
-    nama = st.text_input("Masukkan nama kamu:")
-
-    if st.button("Mulai Latihan"):
-        jawaban_siswa = []
-        skor = 0
-
-        # daftar soal untuk ditampilkan
-        soal_list = df["soal"].tolist()  
-
-        for i, row in df.iterrows():
-            st.write(f"**{i+1}. {row['soal']}**")
-            pilihan_opsi = [row['opsi_a'], row['opsi_b'], row['opsi_c'], row['opsi_d']]
-            jawaban = st.radio("Pilih jawabanmu:", pilihan_opsi, key=f"soal_{i}")
-
-            # Simpan pilihan siswa
-            jawaban_siswa.append({
-                "nama": nama,
-                "soal": row["soal"],
-                "jawaban": jawaban,
-                "kunci": row["kunci"]
-            })
-
-        # Setelah siswa selesai menjawab
-        if st.button("Kirim Jawaban"):
-            hasil = []
-            skor_total = 0
-            total_soal = len(soal_list)
-
-            for row in jawaban_siswa:
-                benar = str(row["jawaban"]).strip().lower() == str(row["kunci"]).strip().lower()
-                if benar:
-                    skor_total += 1
-
-            nilai = (skor_total / total_soal) * 100
-            st.success(f"Skor kamu: {skor_total}/{total_soal} ({nilai:.2f})")
-
-            hasil.append({
-                "nama": nama,
-                "skor_benar": skor_total,
-                "total_soal": total_soal,
-                "nilai": nilai
-            })
-
-            # Tampilkan tabel hasil
-            hasil_df = pd.DataFrame(hasil)
-            st.dataframe(hasil_df)
-
-# Ambil info dari bank soal
-        materi = bank.loc[bank["id"] == q, "materi"].values[0]
-        level = bank.loc[bank["id"] == q, "level_bloom"].values[0]
-
-# Hitung benar per materi
-        benar_materi[materi] = benar_materi.get(materi, 0) + (1 if benar else 0)
-        benar_level[level] = benar_level.get(level, 0) + (1 if benar else 0)
-
-# Buat nilai total
-    nilai = (skor_total / total_soal) * 100 
-    for i, row in df.iterrows():
-         benar = row["jawaban_Benar"]
-                
-# Buat kesimpulan otomatis
-    kesimpulan = []
-# Evaluasi per materi
-    for materi in bank["materi"].unique():
-        jumlah_soal = len(bank[bank["materi"] == materi])
-        benar = benar_materi.get(materi, 0)
-        if benar < jumlah_soal / 2:
-            kesimpulan.append(f"Lemah di materi {materi}")
-        else:
-            kesimpulan.append(f"Sudah menguasai materi {materi}")
-# Evaluasi per level Bloom
-    for level in bank["level_bloom"].unique():
-        jumlah_level = len(bank[bank["level_bloom"] == level])
-        benar = benar_level.get(level, 0)
-        if benar < jumlah_level / 2:
-            kesimpulan.append(f"Perlu meningkatkan kemampuan {level} ({'mengingat' if level=='C1' else 'memahami'})")
-        else:
-            kesimpulan.append(f"Sudah baik pada level {level}")
-    hasil.append({
-        "nama": nama,
-        "skor_benar": skor_total,
-        "total_soal": total_soal,
-        "nilai": nilai,
-        "kesimpulan": "; ".join(kesimpulan)
-    })
-
-
-# ===============================
-# HALAMAN GURU
-# ===============================
-if st.session_state.page == "guru":
-    st.header("👩‍🏫 Hasil Latihan Siswa")
-
-    try:
-        data = pd.read_csv("hasil_latihan.csv", names=["Nama", "Skor"])
-        st.dataframe(data)
-    except FileNotFoundError:
-        st.warning("Belum ada data nilai siswa tersimpan.")
-
-    if st.button("⬅️ Kembali ke Beranda"):
-        st.session_state.page = "home"
-        st.rerun()
