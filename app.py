@@ -113,3 +113,18 @@ if st.session_state.page == "siswa":
     if st.button("⬅️ Kembali ke Beranda"):
         st.session_state.page = "home"
         st.rerun()
+# -----------------------------
+# HALAMAN GURU
+# -----------------------------
+if st.session_state.page == "guru":
+    st.header("👩‍🏫 Rekap Nilai Siswa")
+
+    try:
+        data = pd.read_csv("hasil_latihan.csv", names=["Nama", "Benar", "Total Soal", "Nilai", "Kesimpulan"])
+        st.dataframe(data)
+    except FileNotFoundError:
+        st.warning("Belum ada data nilai siswa tersimpan.")
+
+    if st.button("⬅️ Kembali ke Beranda"):
+        st.session_state.page = "home"
+        st.rerun()
