@@ -98,20 +98,72 @@ if st.session_state.page == "siswa":
             st.success(f"🎯 Skor kamu: {skor_benar}/{total_soal} ({nilai:.2f})")
             st.progress(nilai / 100)
 
-            # Evaluasi hasil
-            if nilai >= 80:
-                kesimpulan = "Pemahamanmu sangat baik! 🌟"
-            elif nilai >= 60:
-                kesimpulan = "Cukup baik, tapi masih perlu memperdalam beberapa konsep ⚙️"
-            else:
-                kesimpulan = "Perlu belajar lagi, tetap semangat ya! 💪"
 
-            st.markdown(f"**Kesimpulan:** {kesimpulan}")
+# Evaluasi hasil berdasarkan skor, materi, dan level Bloom
 
-            hasil_df = pd.DataFrame([
-                {"Nama": nama, "Benar": skor_benar, "Total Soal": total_soal, "Nilai": nilai}
-            ])
-            st.dataframe(hasil_df)
+# Hitung benar per materi dan per level
+benar_materi = {}
+benar_level = {}
+total_materi = {}
+total_level = {}
+
+for i, row in df.iterrows():
+    materi = row.get("materi", "Umum")
+    level = row.get("level", "C1")
+    jawaban = st.session_state.jawaban_siswa.get(i, "")
+    benar = str(jawaban).strip().lower() == str(row["jawaban_benar"]).strip().lower()
+
+    # Hitung total soal per materi & level
+    total_materi[materi] = total_materi.get(materi, 0) + 1
+    total_level[level] = total_level.get(level, 0) + 1
+
+    # Hitung benar per materi & level
+    if benar:
+        benar_materi[materi] = benar_materi.get(materi, 0) + 1
+        benar_level[level] = benar_level.get(level, 0) + 1
+
+# Evaluasi umum berdasarkan skor total
+if nilai >= 80:
+    kesimpulan_umum = "Pemahamanmu sangat baik! 🌟"
+elif nilai >= 60:
+    kesimpulan_umum = "Cukup baik, tapi masih perlu memperdalam beberapa konsep ⚙️"
+else:
+    kesimpulan_umum = "Perlu belajar lagi, tetap semangat ya! 💪"
+
+# Buat kesimpulan tambahan per materi
+kesimpulan_materi = []
+for materi, benar in benar_materi.items():
+    persen = (benar / total_materi[materi]) * 100
+    if persen >= 80:
+        kesimpulan_materi.append(f"✅ Sudah menguasai materi **{materi}** ({persen:.0f}%)")
+    elif persen >= 50:
+        kesimpulan_materi.append(f"⚙️ Cukup pada materi **{materi}** ({persen:.0f}%)")
+    else:
+        kesimpulan_materi.append(f"❌ Perlu belajar lagi pada materi **{materi}** ({persen:.0f}%)")
+
+# Buat kesimpulan tambahan per level Bloom
+kesimpulan_level = []
+for level, benar in benar_level.items():
+    persen = (benar / total_level[level]) * 100
+    if persen >= 80:
+        kesimpulan_level.append(f"✅ Sudah baik pada level **{level}** ({persen:.0f}%)")
+    elif persen >= 50:
+        kesimpulan_level.append(f"⚙️ Cukup pada level **{level}** ({persen:.0f}%)")
+    else:
+        kesimpulan_level.append(f"❌ Perlu ditingkatkan pada level **{level}** ({persen:.0f}%)")
+
+# Gabungkan semua kesimpulan
+st.markdown(f"### 📊 Kesimpulan Umum\n{kesimpulan_umum}")
+st.markdown("### 📘 Analisis Berdasarkan Materi")
+for teks in kesimpulan_materi:
+    st.markdown(f"- {teks}")
+st.markdown("### 🎯 Analisis Berdasarkan Level Taksonomi Bloom")
+for teks in kesimpulan_level:
+    st.markdown(f"- {teks}")
+
+# Simpan kesimpulan utama
+kesimpulan = kesimpulan_umum + " | " + "; ".join(kesimpulan_materi + kesimpulan_level)
+
 
             # Simpan hasil ke CSV
             hasil_df.to_csv("hasil_latihan.csv", mode="a", header=False, index=False)
