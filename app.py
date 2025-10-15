@@ -133,14 +133,55 @@ if st.session_state.page == "siswa":
 # HALAMAN GURU
 # -----------------------------
 if st.session_state.page == "guru":
-    st.header("👩‍🏫 Rekap Nilai Siswa")
+    st.header("👩‍🏫 Halaman Guru")
 
-    try:
-        data = pd.read_csv("hasil_latihan.csv", names=["Nama", "Benar", "Total Soal", "Nilai", "Kesimpulan"])
-        st.dataframe(data)
-    except FileNotFoundError:
-        st.warning("Belum ada data nilai siswa tersimpan.")
+    # Password guru
+    PASSWORD_GURU = "fisika123"  # 🔒 kamu bisa ubah sesuai keinginan
 
-    if st.button("⬅️ Kembali ke Beranda"):
-        st.session_state.page = "home"
-        st.rerun()
+    # Cek apakah guru sudah login
+    if "guru_logged_in" not in st.session_state:
+        st.session_state.guru_logged_in = False
+
+    # Jika belum login, tampilkan input password
+    if not st.session_state.guru_logged_in:
+        with st.form("login_guru_form"):
+            password_input = st.text_input("Masukkan kata sandi guru:", type="password")
+            login_button = st.form_submit_button("🔐 Login")
+
+        if login_button:
+            if password_input == PASSWORD_GURU:
+                st.session_state.guru_logged_in = True
+                st.success("✅ Login berhasil! Mengakses data nilai siswa...")
+                st.rerun()
+            else:
+                st.error("❌ Kata sandi salah. Coba lagi.")
+
+        if st.button("⬅️ Kembali ke Beranda"):
+            st.session_state.page = "home"
+            st.rerun()
+
+    # Jika sudah login, tampilkan data nilai siswa
+    else:
+        st.subheader("📊 Rekap Nilai Siswa")
+
+        try:
+            data = pd.read_csv(
+                "hasil_latihan.csv",
+                names=["No","Nama", "Benar", "Total Soal", "Nilai", "Kesimpulan"]
+            )
+            st.dataframe(data)
+        except FileNotFoundError:
+            st.warning("⚠️ Belum ada data nilai siswa tersimpan.")
+
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("⬅️ Kembali ke Beranda"):
+                st.session_state.page = "home"
+                st.session_state.guru_logged_in = False
+                st.rerun()
+        with col2:
+            if st.button("🚪 Logout Guru"):
+                st.session_state.guru_logged_in = False
+                st.success("Anda telah logout.")
+                st.rerun()
+
