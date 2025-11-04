@@ -54,17 +54,22 @@ def evaluasi_bloom(jawaban_siswa, kunci_jawaban, level_bloom):
     nilai = round((benar / total) * 100, 2)
 
     # Tentukan kompetensi berdasarkan Bloom
-    if nilai >= 85:
+    if nilai == 100:
+        kompetensi = f"Tingkat Pencapaian Sempurna ({level_bloom})"
+        kesimpulan = f"🎉 Luar biasa! Anda telah menguasai seluruh kompetensi pada tingkat {deskripsi_bloom(level_bloom)} ({level_bloom})."
+    elif nilai >= 85:
         kompetensi = f"Tingkat Analisis ({level_bloom})"
+        kesimpulan = f"Sangat baik! Anda sudah mampu menganalisis dengan baik pada tingkat {deskripsi_bloom(level_bloom)}."
     elif nilai >= 70:
         kompetensi = f"Tingkat Penerapan ({level_bloom})"
+        kesimpulan = f"Cukup baik, Anda dapat menerapkan konsep pada tingkat {deskripsi_bloom(level_bloom)}."
     elif nilai >= 55:
         kompetensi = f"Tingkat Pemahaman ({level_bloom})"
+        kesimpulan = f"Perlu latihan lebih lanjut agar pemahaman {deskripsi_bloom(level_bloom)} lebih kuat."
     else:
         kompetensi = f"Tingkat Pengetahuan Dasar ({level_bloom})"
+        kesimpulan = f"Perlu meningkatkan kemampuan {deskripsi_bloom(level_bloom)} ({level_bloom})."
 
-    # Kesimpulan tambahan
-    kesimpulan = f"Perlu meningkatkan kemampuan {deskripsi_bloom(level_bloom)} ({level_bloom})."
     return nilai, kompetensi, kesimpulan
 
 # --------------------------------------------------
@@ -108,7 +113,7 @@ def halaman_siswa(username):
         hasil.to_excel(file_path, index=False)
         st.success("Nilai berhasil disimpan!")
 
-        # Tombol kembali
+        # Tombol kembali ke beranda siswa
         if st.button("⬅️ Kembali ke Beranda Siswa"):
             st.session_state.pop("login_siswa", None)
             st.experimental_rerun()
@@ -134,7 +139,7 @@ def halaman_guru():
         st.session_state["soal_terunggah"] = True
         st.success("✅ Soal berhasil diunggah dan disimpan!")
 
-    # Tampilkan soal yang baru diunggah
+    # Tampilkan soal yang sudah diunggah
     if os.path.exists("data/soal.xlsx"):
         st.subheader("📄 Soal yang sudah diunggah:")
         soal = pd.read_excel("data/soal.xlsx")
@@ -163,8 +168,8 @@ def halaman_guru():
     else:
         st.info("Belum ada siswa yang mengerjakan soal.")
 
-    # Tombol logout guru
-    if st.button("⬅️ Keluar ke Beranda Guru"):
+    # Tombol logout guru ke beranda
+    if st.button("⬅️ Kembali ke Beranda Guru"):
         st.session_state.pop("login_guru", None)
         st.experimental_rerun()
 
