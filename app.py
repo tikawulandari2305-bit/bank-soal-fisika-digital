@@ -34,6 +34,19 @@ def baca_soal():
         return None
 
 # --------------------------------------------------
+# Fungsi deskripsi level Bloom
+def deskripsi_bloom(level):
+    mapping = {
+        "C1": "Mengingat",
+        "C2": "Memahami",
+        "C3": "Menerapkan",
+        "C4": "Menganalisis",
+        "C5": "Menilai",
+        "C6": "Mencipta"
+    }
+    return mapping.get(level, "Tidak diketahui")
+
+# --------------------------------------------------
 # Fungsi evaluasi nilai & taksonomi Bloom
 def evaluasi_bloom(jawaban_siswa, kunci_jawaban, level_bloom):
     benar = sum([1 for i in range(len(jawaban_siswa)) if jawaban_siswa[i] == kunci_jawaban[i]])
@@ -49,7 +62,10 @@ def evaluasi_bloom(jawaban_siswa, kunci_jawaban, level_bloom):
         kompetensi = f"Tingkat Pemahaman ({level_bloom})"
     else:
         kompetensi = f"Tingkat Pengetahuan Dasar ({level_bloom})"
-    return nilai, kompetensi
+
+    # Kesimpulan tambahan
+    kesimpulan = f"Perlu meningkatkan kemampuan {deskripsi_bloom(level_bloom)} ({level_bloom})."
+    return nilai, kompetensi, kesimpulan
 
 # --------------------------------------------------
 # Halaman Siswa
@@ -72,14 +88,15 @@ def halaman_siswa(username):
     if st.button("Kirim Jawaban"):
         kunci = list(soal_df['kunci'])
         level = list(soal_df['level_bloom'])
-        nilai, kompetensi = evaluasi_bloom(jawaban_siswa, kunci, max(set(level), key=level.count))
+        nilai, kompetensi, kesimpulan = evaluasi_bloom(jawaban_siswa, kunci, max(set(level), key=level.count))
 
         st.success(f"Nilai Anda: {nilai}")
-        st.info(f"Kesimpulan: Kompetensi Anda berada pada {kompetensi}")
+        st.info(f"Kesimpulan: {kesimpulan}")
 
         # Simpan nilai ke Excel
         os.makedirs("data", exist_ok=True)
-        hasil_baru = pd.DataFrame([[username, nilai, kompetensi]], columns=["Nama", "Nilai", "Kompetensi"])
+        hasil_baru = pd.DataFrame([[username, nilai, kompetensi, kesimpulan]],
+                                  columns=["Nama", "Nilai", "Kompetensi", "Kesimpulan"])
 
         file_path = "data/nilai.xlsx"
         if os.path.exists(file_path):
@@ -90,6 +107,11 @@ def halaman_siswa(username):
 
         hasil.to_excel(file_path, index=False)
         st.success("Nilai berhasil disimpan!")
+
+        # Tombol kembali
+        if st.button("⬅️ Kembali ke Beranda Siswa"):
+            st.session_state.pop("login_siswa", None)
+            st.experimental_rerun()
 
 # --------------------------------------------------
 # Halaman Guru
@@ -109,12 +131,11 @@ def halaman_guru():
         with open(file_path, "wb") as f:
             f.write(file.getbuffer())
 
-        # Simpan status agar tidak reload ke awal
         st.session_state["soal_terunggah"] = True
-        st.success("✅ Soal berhasil diunggah!")
+        st.success("✅ Soal berhasil diunggah dan disimpan!")
 
     # Tampilkan soal yang baru diunggah
-    if "soal_terunggah" in st.session_state and os.path.exists("data/soal.xlsx"):
+    if os.path.exists("data/soal.xlsx"):
         st.subheader("📄 Soal yang sudah diunggah:")
         soal = pd.read_excel("data/soal.xlsx")
         st.dataframe(soal)
@@ -141,6 +162,11 @@ def halaman_guru():
 
     else:
         st.info("Belum ada siswa yang mengerjakan soal.")
+
+    # Tombol logout guru
+    if st.button("⬅️ Keluar ke Beranda Guru"):
+        st.session_state.pop("login_guru", None)
+        st.experimental_rerun()
 
 # --------------------------------------------------
 # Tampilan utama (sidebar)
