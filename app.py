@@ -76,11 +76,11 @@ def halaman_siswa(username):
         st.success(f"Nilai Anda: {nilai}")
         st.info(f"Kesimpulan: Kompetensi Anda berada pada {kompetensi}")
 
-        # Simpan nilai ke CSV
+        # Simpan nilai ke Excel
         os.makedirs("data", exist_ok=True)
         hasil = pd.DataFrame([[username, nilai, kompetensi]], columns=["Nama", "Nilai", "Kompetensi"])
-        if os.path.exists("data/nilai.csv"):
-            hasil_lama = pd.read_csv("data/nilai.csv")
+        if os.path.exists("data/nilai.xlsx"):
+            hasil_lama = pd.read_csv("data/nilai.xlsx")
             hasil = pd.concat([hasil_lama, hasil], ignore_index=True)
         hasil.to_csv("data/nilai.csv", index=False)
         st.success("Nilai berhasil disimpan!")
@@ -115,8 +115,8 @@ def halaman_guru():
 
     # Rekap nilai siswa
     st.subheader("📊 Rekap Nilai Siswa")
-    if os.path.exists("data/nilai.csv"):
-        df = pd.read_csv("data/nilai.csv")
+    if os.path.exists("data/nilai.xlsx"):
+        df = pd.read_xlsx("data/nilai.xlsx")
         st.dataframe(df)
         rata = df['Nilai'].mean()
         st.write(f"Rata-rata kelas: **{rata:.2f}**")
