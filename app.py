@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
+from io import BytesIO
 
 # --------------------------------------------------
 # Konfigurasi halaman
@@ -78,11 +79,16 @@ def halaman_siswa(username):
 
         # Simpan nilai ke Excel
         os.makedirs("data", exist_ok=True)
-        hasil = pd.DataFrame([[username, nilai, kompetensi]], columns=["Nama", "Nilai", "Kompetensi"])
-        if os.path.exists("data/nilai.xlsx"):
-            hasil_lama = pd.read_csv("data/nilai.xlsx")
-            hasil = pd.concat([hasil_lama, hasil], ignore_index=True)
-        hasil.to_csv("data/nilai.csv", index=False)
+        hasil_baru = pd.DataFrame([[username, nilai, kompetensi]], columns=["Nama", "Nilai", "Kompetensi"])
+
+        file_path = "data/nilai.xlsx"
+        if os.path.exists(file_path):
+            hasil_lama = pd.read_excel(file_path)
+            hasil = pd.concat([hasil_lama, hasil_baru], ignore_index=True)
+        else:
+            hasil = hasil_baru
+
+        hasil.to_excel(file_path, index=False)
         st.success("Nilai berhasil disimpan!")
 
 # --------------------------------------------------
@@ -115,11 +121,24 @@ def halaman_guru():
 
     # Rekap nilai siswa
     st.subheader("📊 Rekap Nilai Siswa")
-    if os.path.exists("data/nilai.xlsx"):
-        df = pd.read_xlsx("data/nilai.xlsx")
+    nilai_path = "data/nilai.xlsx"
+    if os.path.exists(nilai_path):
+        df = pd.read_excel(nilai_path)
         st.dataframe(df)
         rata = df['Nilai'].mean()
         st.write(f"Rata-rata kelas: **{rata:.2f}**")
+
+        # --- Tombol download rekap nilai ---
+        buffer = BytesIO()
+        df.to_excel(buffer, index=False)
+        buffer.seek(0)
+        st.download_button(
+            label="📥 Download Rekap Nilai (.xlsx)",
+            data=buffer,
+            file_name="rekap_nilai_siswa.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
     else:
         st.info("Belum ada siswa yang mengerjakan soal.")
 
